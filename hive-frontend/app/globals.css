@@ -1,0 +1,254 @@
+/* app/globals.css */
+@import "tailwindcss";
+
+/* -------------------------------------------------------------------------- */
+/* 1. TAILWIND V4 THEME CONFIGURATION */
+/* -------------------------------------------------------------------------- */
+@theme {
+  /* --- Brand Colors (OKLCH) --- */
+  --color-brand-primary: oklch(0.79 0.18 80);   /* #ffb700 */
+  --color-brand-secondary: oklch(0.72 0.16 60); /* #f59e0b */
+
+  /* --- Design Tokens Mapping --- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  
+  --color-primary: var(--brand-primary); /* Maps 'text-primary' to your brand color */
+  --color-primary-foreground: oklch(0.98 0 0);
+
+  /* --- Fonts --- */
+  /* Ensure these match the variable names in layout.tsx */
+  --font-sans: var(--font-inter); 
+  --font-space: var(--font-space);
+  --font-mono: var(--font-mono);
+
+  /* --- Radius --- */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* --- Custom Animations (Landing Page) --- */
+  --animate-float-deck: floatDeck 8s ease-in-out infinite;
+  --animate-scan-node: scanNode 3s infinite linear;
+  --animate-scan-beam: scan-beam 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  --animate-text-shimmer: shimmer-text 6s linear infinite;
+  --animate-scroll-ticker: scrollTicker 30s linear infinite;
+  --animate-pulse-hex: pulseHex 2s infinite ease-in-out;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-dash-flow: dash-flow 1s linear infinite;
+  --animate-breathe: breathe 3s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.8s infinite;
+}
+
+/* -------------------------------------------------------------------------- */
+/* 2. ROOT VARIABLES (TOKENS) */
+/* -------------------------------------------------------------------------- */
+:root {
+  /* --- Light Mode (Clean, Industrial) --- */
+  --background: oklch(0.99 0 0);
+  --foreground: oklch(0.12 0.01 0);
+
+  --card: oklch(1 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.50 0.02 80);
+
+  --border: oklch(0.92 0 0);
+  --ring: oklch(0.79 0.18 80 / 0.4); /* Gold ring */
+  
+  --brand-primary: oklch(0.79 0.18 80);
+  --radius: 0.5rem;
+
+  /* For hive-pointer-glow defaults */
+  --mx: 50%;
+  --my: 20%;
+}
+
+.dark {
+  /* --- Dark Mode (The "Hive" Void) --- */
+  --background: oklch(0.12 0.01 0);      /* #050505 (Void) */
+  --foreground: oklch(0.98 0 0);         /* White text */
+
+  --card: oklch(0.17 0.01 270);          /* #0e0e10 (Armor) */
+  --muted: oklch(0.20 0.01 270);         /* #1a1a1d (Armor Light) */
+  --muted-foreground: oklch(0.65 0.02 85);
+
+  --border: oklch(0.79 0.18 80 / 15%);   /* Gold/Amber glow borders */
+  --ring: oklch(0.79 0.18 80 / 0.3);
+  
+  --brand-primary: oklch(0.79 0.18 80);
+}
+
+/* -------------------------------------------------------------------------- */
+/* 3. BASE RESETS */
+/* -------------------------------------------------------------------------- */
+@layer base {
+  * {
+    @apply border-border outline-ring/30;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-brand-primary/30 selection:text-brand-primary;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "cv02", "cv03", "cv04", "ss01";
+  }
+
+  /* Scoped transitions */
+  a, button, [role="button"], input, textarea, select {
+    @apply transition-colors duration-200;
+  }
+
+  /* Focus ring */
+  :focus-visible {
+    outline: 2px solid color-mix(in oklch, var(--ring) 100%, transparent);
+    outline-offset: 3px;
+  }
+
+  /* Fix for Radix UI dropdowns */
+  [data-radix-popper-content-wrapper] {
+    z-index: 100 !important;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. UTILITIES & VISUAL EFFECTS */
+/* -------------------------------------------------------------------------- */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* --- Technical Grid Background --- */
+  .tech-grid {
+    background-size: 50px 50px;
+    background-image: 
+      linear-gradient(to right, color-mix(in oklch, var(--border), transparent 70%) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklch, var(--border), transparent 70%) 1px, transparent 1px);
+    mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+  }
+
+  /* --- Vignette Overlay --- */
+  .vignette {
+    background: radial-gradient(circle at center, transparent 0%, var(--background) 100%);
+  }
+
+  /* --- Pointer Glow --- */
+  .hive-pointer-glow {
+    background: radial-gradient(
+      560px circle at var(--mx, 50%) var(--my, 20%),
+      oklch(0.79 0.18 80 / 0.08),
+      transparent 78%
+    );
+  }
+
+  /* --- Glass Panel --- */
+  .glass-panel {
+    @apply bg-background/70 backdrop-blur-xl border border-brand-primary/10 dark:border-brand-primary/15;
+    box-shadow: 0 18px 70px -45px rgba(0, 0, 0, 0.7);
+  }
+
+  /* --- Custom Cursor --- */
+  .cursor-outer {
+    width: 40px; 
+    height: 40px; 
+    border: 2px solid var(--brand-primary); 
+    position: fixed; 
+    top: 0; left: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none; 
+    z-index: 9999; 
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    transition: width 0.3s, height 0.3s, transform 0.1s ease-out;
+    mix-blend-mode: exclusion;
+  }
+
+  .cursor-inner { 
+    width: 6px; 
+    height: 6px; 
+    background: var(--brand-primary); 
+    position: fixed; 
+    top: 0; left: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none; 
+    z-index: 9999; 
+    border-radius: 50%;
+  }
+
+  body.hovering .cursor-outer { 
+    transform: translate(-50%, -50%) scale(1.8) rotate(30deg); 
+    background: oklch(0.79 0.18 80 / 0.1); 
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 5. ANIMATION KEYFRAMES */
+/* -------------------------------------------------------------------------- */
+
+/* Floating 3D Deck */
+@keyframes floatDeck {
+  0%, 100% { transform: rotateX(15deg) translateY(0px); }
+  50% { transform: rotateX(15deg) translateY(-20px); }
+}
+
+/* Scanning Line */
+@keyframes scanNode { 
+  0% { transform: translateY(-80px); } 
+  100% { transform: translateY(80px); } 
+}
+
+/* Vertical Scanner Beam */
+@keyframes scan-beam {
+  0% { top: -10%; opacity: 0; }
+  20% { opacity: 0.5; }
+  80% { opacity: 0.5; }
+  100% { top: 110%; opacity: 0; }
+}
+
+/* Text Shimmer */
+@keyframes shimmer-text {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Infinite Scroll */
+@keyframes scrollTicker { 
+  0% { transform: translateX(0); } 
+  100% { transform: translateX(-50%); } 
+}
+
+/* Hexagon Pulse */
+@keyframes pulseHex { 
+  0%, 100% { transform: scale(1); opacity: 1; } 
+  50% { transform: scale(1.5); opacity: 0.5; } 
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - 2rem)); }
+}
+
+/* Dashed Flow Line */
+@keyframes dash-flow {
+  to { stroke-dashoffset: -20; }
+}
+
+/* Breathing Effect */
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 10px oklch(0.79 0.18 80 / 0.1); border-color: oklch(0.79 0.18 80 / 0.2); }
+  50% { box-shadow: 0 0 25px oklch(0.79 0.18 80 / 0.3); border-color: oklch(0.79 0.18 80 / 0.5); }
+}
+
+/* Standard Shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
